@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>速聚代码生成器</title>
+  <link rel='stylesheet' href='/lib/bootstrap-4.6.0/css/bootstrap.min.css' />
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">速聚代码生成器</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">生成代码 <span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- <div class="row">
+    <div class="col">
+      1.基本配置
+    </div>
+    <div class="col">
+      2.前端配置
+    </div>
+    <div class="col">
+      3.生成代码
+    </div>
+  </div> -->
+ <% if(step == 1){ %>
+  <div class="row" style="margin:30px auto;width:600px ">
+    <form  action="/gen_info" method="post">
+      <div class="form-group">
+        <label for="exampleInputEmail1">项目名称</label>
+        <input type="name" class="form-control" >
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">作者</label>
+        <input class="form-control" name="author" >
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">表前缀移除</label>
+        <input class="form-control" name="pre">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">生成文件</label>
+        <br/>
+        <span>后端: </span>
+        <label ><input type="checkbox" name="files[]" value="mappper"  >mappper</label> 
+        <label ><input type="checkbox" name="files[]" value="mappperXML" >mappperXML</label> 
+        <label ><input type="checkbox" name="files[]" value="entity" >entity</label> 
+        <label ><input type="checkbox" name="files[]" value="param" >param</label> 
+        <label ><input type="checkbox" name="files[]" value="result" >result</label> 
+        <label ><input type="checkbox" name="files[]" value="controller" >controller</label> 
+        <label ><input type="checkbox" name="files[]" value="service">service</label> 
+        <label ><input type="checkbox" name="files[]" value="serviceimpl">serviceimpl</label> 
+        <label ><input type="checkbox" name="files[]" value="enum">enum</label> 
+        <br/>
+        <span>前端: </span>
+        <label ><input type="checkbox" name="files[]" value="indexJsx" >indexJsx</label> 
+        <label ><input type="checkbox" name="files[]" value="addJsx" >addJsx</label> 
+        <label ><input type="checkbox" name="files[]" value="editJsx" >editJsx</label> 
+        <label ><input type="checkbox" name="files[]" value="apiJs" >apiJs</label> 
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">是否生成api文档</label>
+        <br/>
+        <label><input type="radio" name="api">是</label> 
+        <label><input type="radio" name="api">否</label> 
+      </div>
+      <button type="submit" class="btn btn-primary">下一步</button>
+    </form>
+  </div>
+  <%}%>
+
+  <% if(step == 2){ %>
+  <div class="row" >
+    <div class="col col-2">
+      <table class="table table-bordered">
+        <thead>
+          <td><input type="checkbox"> xxx数据库</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox">  xxx表</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox">  xxx表</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox">  xxx表</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox">  xxx表</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <td>字段名</td>
+          <td>表单名称</td>
+          <td>表单类型</td>
+          <td>列表显示</td>
+          <td>新增显示</td>
+          <td>新增必填</td>
+          <td>修改显示</td>
+          <td>修改必填</td>
+          <td>是否为查询条</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>编号</td>
+            <td>
+              <select name="" id="">
+                <option value="">文本框</option>
+              </select>
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>编号</td>
+            <td>
+              <select name="" id="">
+                <option value="">文本框</option>
+                <option value="">单选框</option>
+                <option value="">多选框</option>
+                <option value="">下拉框</option>
+                <option value="">时间框</option>
+                <option value="">多行文本</option>
+              </select>
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>编号</td>
+            <td>
+              <select name="" id="">
+                <option value="">文本框</option>
+              </select>
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <% } %>
+
+
+  <script src="/lib/bootstrap-4.6.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>
