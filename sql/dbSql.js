@@ -1,7 +1,12 @@
+/**
+ * 代码生成器相关的sql
+ * @type {{tables: string}}
+ */
 var DbSql = {
-    insert : 'INSERT INTO User(id, userName, password) VALUES(?,?,?) ',
-    query : 'SELECT * FROM user ',
-    getUserById: 'SELECT * FROM user WHERE uid = ? '
+    // 显示所有的表
+    tables : 'show tables',
+    // 显示表中的所有字段 ? 占位符
+    columns : 'show full fields from '
 };
 
 module.exports = DbSql;
