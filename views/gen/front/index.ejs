@@ -1,16 +1,16 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message, Input, Drawer } from 'antd';
 import React, { useState, useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
+import { FormattedMessage } from 'umi';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import UpdateForm from './components/UpdateForm';
-import { queryRule, updateRule, addRule, removeRule } from './service';
+import { query<%=pskTableName%>, update<%=pskTableName%>, add<%=pskTableName%>, remove<%=pskTableName%> } from './service';
 
 /**
- * 添加节点
+ * 添加
  * @author <%=author %>
  * @param fields
  */
@@ -19,7 +19,7 @@ const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
 
   try {
-    await addRule({ ...fields });
+    await add<%=pskTableName%>({ ...fields });
     hide();
     message.success('添加成功');
     return true;
@@ -39,10 +39,10 @@ const handleUpdate = async (fields) => {
   const hide = message.loading('正在配置');
 
   try {
-    await updateRule({
-      name: fields.name,
-      desc: fields.desc,
-      key: fields.key,
+    await update<%=pskTableName%>({
+      <% for (const index in updateColumns){%>
+      <%=updateColumns[index]['Field']%>: fields.<%=updateColumns[index]['Field']%>,
+      <% } %>
     });
     hide();
     message.success('配置成功');
@@ -64,7 +64,7 @@ const handleRemove = async (selectedRows) => {
   if (!selectedRows) return true;
 
   try {
-    await removeRule({
+    await remove<%=pskTableName%>({
       key: selectedRows.map((row) => row.key),
     });
     hide();
@@ -87,40 +87,19 @@ const TableList = () => {
   const actionRef = useRef();
   const [currentRow, setCurrentRow] = useState();
   const [selectedRowsState, setSelectedRows] = useState([]);
-  /** 国际化配置 */
 
-  const intl = useIntl();
   const columns = [
+    <% for (let i in allColumns) {%>
     {
-      title: '账套ID',
-      dataIndex: 'id',
-      valueType: 'index',
-      sorter: true,
-      search: false,
+      title: '<%=listColumns[i]['Comment']%>',
+      dataIndex: '<%=listColumns[i]['Comment']%>',
+      valueType: '<%=listColumns[i]['StringType']%>',
+      search: '<%=listColumns[i]['isSearch']%>',
+      hideInForm: <%=listColumns[i]['showList']%>,
+
     },
-    {
-      title: '账套名称',
-      dataIndex: 'name',
-      tip: '规则名称是唯一的 key',
-      render: (dom, entity) => {
-        return (
-          <a
-            onClick={() => {
-              setCurrentRow(entity);
-              setShowDetail(true);
-            }}
-          >
-            {dom}
-          </a>
-        );
-      },
-    },
-    {
-      title: '描述',
-      dataIndex: 'desc',
-      valueType: 'textarea',
-      search: false,
-    },
+   <%}%>
+
     {
       title: '状态',
       dataIndex: 'status',
@@ -145,31 +124,6 @@ const TableList = () => {
       },
     },
     {
-      title: '更新时间',
-      sorter: true,
-      dataIndex: 'updatedAt',
-      valueType: 'dateTime',
-      search: false,
-      renderFormItem: (item, { defaultRender, ...rest }, form) => {
-        const status = form.getFieldValue('status');
-
-        if (`${status}` === '0') {
-          return false;
-        }
-
-        if (`${status}` === '3') {
-          return (
-            <Input
-              {...rest}
-              placeholder='请输入异常原因！'
-            />
-          );
-        }
-
-        return defaultRender(item);
-      },
-    },
-    {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
@@ -182,20 +136,14 @@ const TableList = () => {
           }}
         >
           编辑
-        </a>,
-        <a  key='bak' onClick={()=>{
-
-        }}>备份</a>,
-        <a key='subscribeAlert' href='https://procomponents.ant.design/'>
-          登入
-        </a>,
+        </a>
       ],
     },
   ];
   return (
     <PageContainer>
       <ProTable
-        headerTitle='账套管理'
+        headerTitle='xx管理'
         actionRef={actionRef}
         rowKey='key'
         search={{
@@ -212,7 +160,7 @@ const TableList = () => {
             <PlusOutlined /> 新建
           </Button>,
         ]}
-        request={(params, sorter, filter) => queryRule({ ...params, sorter, filter })}
+        request={(params, sorter, filter) => query<%=pskTableName%>({ ...params, sorter, filter })}
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -222,7 +170,7 @@ const TableList = () => {
       />
 
       <ModalForm
-        title='新建账套'
+        title='新建'
         width='800px'
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
@@ -238,8 +186,9 @@ const TableList = () => {
           }
         }}
       >
+
         <ProFormText
-          rules={[
+          <%=pskTableName%>s={[
             {
               required: true,
               message: '规则名称为必填项',
@@ -248,6 +197,7 @@ const TableList = () => {
           width='md'
           name='name'
         />
+
         <ProFormTextArea width='md' name='desc' />
       </ModalForm>
       <UpdateForm

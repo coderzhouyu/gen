@@ -5,10 +5,8 @@
     <title>速聚代码生成器</title>
     <link rel='stylesheet' href='/lib/bootstrap-4.6.0/css/bootstrap.min.css'/>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
-
-    <!--  <script src="/lib/bootstrap-4.6.0/js/bootstrap.min.js"></script>-->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/lib/vue.js"></script>
+    <script src="/lib/axios.min.js"></script>
 </head>
 
 <body>
@@ -29,7 +27,7 @@
 
 <% if(step === 1){ %>
     <div class="row" style="margin:30px auto;width:600px ">
-        <form action="/gen_info" method="post">
+        <form action="/tables" method="post">
             <div class="form-group">
                 <label for="exampleInputEmail1">项目名称</label>
                 <input type="name" class="form-control">
@@ -78,10 +76,10 @@
         <button @click="gen" class="btn btn-primary">生成</button>
         <div class="row">
             <div class="col col-3">
-                <table class="table table-bordered " >
+                <table class="table table-bordered ">
                     <tbody style="height:600px" class="overflow-auto position-absolute">
                     <tr v-for="item in tables" :key="item.value" @click="tableClick(item)">
-                        <td><input type="checkbox" v-model="item.checked" >{{ item.value }}</td>
+                        <td><input type="checkbox" v-model="item.checked" />{{ item.value }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -144,20 +142,21 @@
             data: {
                 tables: [],
                 columns: [],
-                tableColumn:{}
+                tableColumn: {}
             },
-            created(){
-                <%- JSON.stringify(tables) %>.forEach(item=>{
-                        this.tables.push({
-                            value:item,
-                            checked:false
-                        })
+            created() {
+                <%- JSON.stringify(tables) %>.
+                forEach(item => {
+                    this.tables.push({
+                        value: item,
+                        checked: false
+                    })
                 })
             },
             methods: {
                 tableClick(item) {
                     if (this.tableColumn[item.value]) {
-                        this.columns  = this.tableColumn[item.value]
+                        this.columns = this.tableColumn[item.value]
                         item.checked = true
                         return
                     }
@@ -167,33 +166,42 @@
                             name: item.value
                         }
                     })
-                    .then(response => {
-                        this.columns  = this.tableColumn[item.value] =
-                        response.data.map(value => {
-                            value.StringType = value.Type.indexOf("(") !== -1 ?
-                                value.Type.split("(")[0] : value.Type
-                            value.showList = true
-                            value.showAdd = true
-                            value.mustAdd = true
-                            value.showUpdate = true
-                            value.mustUpdate = true
-                            value.isSearch = true
-                            return value
+                        .then(response => {
+                            this.columns = this.tableColumn[item.value] =
+                                response.data.map(value => {
+                                    value.StringType = value.Type.indexOf("(") !== -1 ?
+                                        value.Type.split("(")[0] : value.Type
+                                    value.showList = true
+                                    value.showAdd = true
+                                    value.mustAdd = true
+                                    value.showUpdate = true
+                                    value.mustUpdate = true
+                                    value.isSearch = true
+                                    return value
+                                })
                         })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    item.checked = true
+                },
+                gen() {
+                    let tableColumn = this.tableColumn
+                    axios.post('/gen', {
+                            tableColumn,
+                            postData:<%- JSON.stringify(postData) %>
+                        })
+                    .then(response => {
+                        console.log(response)
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
-                    item.checked = true
-                },
-                gen() {
-                    console.log(this.tableColumn)
                 }
             }
         })
     </script>
 <% } %>
-
 
 </body>
 
